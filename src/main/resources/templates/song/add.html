@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+
+<body class="container">
+
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+
+<form method="post" style="max-width:600px;" th:object="${song}">
+    <div class="form-group">
+        <label th:for="artist">Artist</label>
+        <input class="form-control" th:field="*{artist}" th:value="${artist}" />
+        <span th:errors="*{artist}" class="error"></span>
+        <label th:for="name">Song Name</label>
+        <input class="form-control" th:field="*{name}" th:value="${name}"/>
+        <span th:errors="*{name}" class="error"></span>
+        <label th:for="minutes">Minutes</label>
+        <input class="form-control" th:field="*{minutes}" th:value="${minutes}"/>
+        <span th:errors="*{minutes}" class="error"></span>
+        <label th:for="seconds">Seconds</label>
+        <input class="form-control" th:field="*{seconds}" th:value="${seconds}"/>
+        <span th:errors="*{seconds}" class="error"></span>
+
+    </div>
+
+
+    <input type="submit" value="Add Songlist" />
+</form>
+
+</body>
+</html>

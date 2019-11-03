@@ -12,14 +12,17 @@
         <form method="post" style="max-width:600px;" th:object="${user}">
             <div class="form-group">
                 <label th:for="username">Username</label>
-                <input class="form-control" th:field="*{username}" />
+                <input class="form-control" th:field="*{username}" th:value="${username}"/>
                 <span th:errors="*{username}" class="error"></span>
                 <label th:for="email">Email</label>
-                <input type="email" class="form-control" th:field="*{email}" />
-                <span th:errors="*{email}" class="error"></span>
+                <input type="email" class="form-control" th:field="*{email}" th:value="${email}"/>
+                <div class="alert alert-danger"><span th:errors="*{email}" class="error"></span></div>
                 <label th:for="password">Password</label>
                 <input type="password" class="form-control" th:field="*{password}" />
                 <span th:errors="*{password}" class="error"></span>
+                <label for="verifyPassword">Verify Password </label>
+                <input class="form-control" name="verifyPassword", id="verifyPassword" type="password"/>
+                <span  class="error" th:text="${verifyPasswordError}"></span>
             </div>
 
 
