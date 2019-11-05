@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+
+<body class="container">
+
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<h1>Setlists</h1>
+<ul>
+    <li th:each="setlist : ${setlists}"><a th:href="@{'/setlist/view/' + ${setlist.id}}" th:text="${setlist.venue}"></a></li>
+</ul>
+
+<h1>Songs</h1>
+<ul>
+    <li th:each="song : ${songs}"><a th:href="@{'/song/view/' + ${song.id}}" th:text="${song.name}"></a></li>
+</ul>
+
+
+</body>
+</html>

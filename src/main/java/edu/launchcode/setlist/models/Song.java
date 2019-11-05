@@ -26,6 +26,10 @@ public class Song {
     @ManyToMany(mappedBy = "songs")
     private List<Songlist> songlists;
 
+
+    @ManyToMany(mappedBy = "songs")
+    private List<Setlist> setlists;
+
     @ManyToOne
     private Library library;
 
