@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+
+<body class="container">
+
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+
+<form method="post" style="max-width:600px;" th:object="${form}">
+    <div class="form-group">
+        <table>
+            <tr>
+                <td>Songs</td>
+            </tr>
+            <tr>
+                <td>
+                    <th:block th:each="song : ${songs}">
+                        <input type="checkbox" name="songs" th:value="${song.id}">
+                        <label th:text="${song.name}"></label>
+                    </th:block>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <input type="submit" value="Edit Setlist" />
+</form>
+
+</body>
+</html>

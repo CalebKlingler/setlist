@@ -42,6 +42,9 @@ public class Setlist {
         return venue;
     }
 
+    public void addSong(Song song){
+        songs.add(song);
+    }
     public void setVenue(String venue) {
         this.venue = venue;
     }
@@ -52,9 +55,6 @@ public class Setlist {
         return songs;
     }
 
-    public void setSongs(List<Song> songs) {
-        this.songs = songs;
-    }
 
     public String getDay() {
         return day;

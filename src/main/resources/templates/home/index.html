@@ -10,7 +10,7 @@
 
 <h1>Setlists</h1>
 <ul>
-    <li th:each="setlist : ${setlists}"><a th:href="@{'/setlist/view/' + ${setlist.id}}" th:text="${setlist.venue}"></a></li>
+    <li th:each="setlist : ${setlists}"><a th:href="@{'/setlist/edit/' + ${setlist.id}}" th:text="${setlist.venue}"></a></li>
 </ul>
 
 <h1>Songs</h1>
