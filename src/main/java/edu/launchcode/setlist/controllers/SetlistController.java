@@ -14,6 +14,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -63,9 +64,44 @@ public class SetlistController {
         }
         setlistDao.save(theSetlist);
         String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
+        int totalMinutes = 0;
+        int totalSeconds = 0;
+        List<Song> allSongs = theSetlist.getSongs();
+        for (Song song : allSongs){
+            totalMinutes += song.getMinutes();
+            totalSeconds += song.getSeconds();
+        }
+        int secondsMinutes = totalSeconds/60;
+        totalSeconds = totalSeconds % 60;
+        totalMinutes += secondsMinutes;
         model.addAttribute("setlist", theSetlist);
         model.addAttribute("date", date);
         model.addAttribute("songs", theSetlist.getSongs());
+        model.addAttribute("totalMinutes", totalMinutes );
+        model.addAttribute("totalSeconds", totalSeconds);
+        return "setlist/view";
+    }
+    @RequestMapping(value = "view/{setlistId}", method = RequestMethod.GET)
+    public String viewSetlist(Model model, @PathVariable int setlistId){
+        Setlist theSetlist = setlistDao.findById(setlistId).get();
+        String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
+        int totalMinutes = 0;
+        int totalSeconds = 0;
+        List<Song> allSongs = theSetlist.getSongs();
+        for (Song song : allSongs){
+            totalMinutes += song.getMinutes();
+            totalSeconds += song.getSeconds();
+        }
+        int secondsMinutes = totalSeconds/60;
+        totalSeconds = totalSeconds % 60;
+        totalMinutes += secondsMinutes;
+        model.addAttribute("setlist", theSetlist);
+        model.addAttribute("date", date);
+        model.addAttribute("songs", theSetlist.getSongs());
+        model.addAttribute("totalMinutes", totalMinutes );
+        model.addAttribute("totalSeconds", totalSeconds);
         return "setlist/view";
     }
 }
+
+

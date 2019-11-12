@@ -19,7 +19,8 @@
                 <td>
                     <th:block th:each="song : ${songs}">
                         <input type="checkbox" name="songs" th:value="${song.id}">
-                        <label th:text="${song.name}"></label>
+                        <label th:text="${song.name + ' - ' + song.minutes + ':' + song.seconds}"></label>
+                        <br>
                     </th:block>
                 </td>
             </tr>
@@ -28,7 +29,7 @@
     </div>
 
 
-    <input type="submit" value="Edit Setlist" />
+    <input type="submit" value="Add Songs" />
 </form>
 
 </body>

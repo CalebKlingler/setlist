@@ -13,8 +13,9 @@
 <h2 th:text="${date}"></h2>
 
 <table>
-    <tr th:each="song : ${songs}" th:text="${song.name}"></tr>
+    <tr>
+        <td> <th:block th:each="song : ${songs}"><p th:text="${song.name + ' - ' + song.minutes + ':' + song.seconds}"></p><br></th:block> </td></tr>
 </table>
-
+<h2 th:text="${'Total time: ' + totalMinutes + ':' + totalSeconds}"></h2>
 </body>
 </html>
