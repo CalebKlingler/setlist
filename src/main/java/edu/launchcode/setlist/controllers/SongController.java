@@ -8,12 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.swing.text.EditorKit;
 import javax.validation.Valid;
-
-
+import java.util.List;
 
 
 @Controller
@@ -35,5 +36,37 @@ public class SongController {
         model.addAttribute("song", newSong);
         model.addAttribute("title", "Your new song!");
         return "song/index";
+    }
+    @RequestMapping(value = "edit/{songId}", method = RequestMethod.GET)
+    public String editSong(Model model, @PathVariable int songId){
+        Song theSong = songDao.findById(songId).get();
+        model.addAttribute("song", theSong);
+        model.addAttribute("title", "Edit Song");
+        return "song/edit";
+
+    }
+    @RequestMapping(value = "edit/{songId}", method = RequestMethod.POST)
+    public String processEditSong(Model model, @PathVariable int songId, @Valid Song newSong){
+        Song theSong = songDao.findById(songId).get();
+        theSong.setArtist(newSong.getArtist());
+        theSong.setName(newSong.getName());
+        theSong.setMinutes(newSong.getMinutes());
+        theSong.setSeconds(newSong.getSeconds());
+        songDao.save(theSong);
+        model.addAttribute("song", theSong);
+        model.addAttribute("title", "Updated song!");
+        return "song/index";
+
+    }
+
+    @RequestMapping(value = "view/{songId}", method = RequestMethod.GET)
+    public String viewSong(Model model, @PathVariable int songId){
+        Song theSong = songDao.findById(songId).get();
+        String totalTime = theSong.getTotalTime();
+        model.addAttribute("song", theSong);
+        model.addAttribute("title", theSong.getName());
+        model.addAttribute("time", totalTime);
+        return "song/view";
+
     }
 }

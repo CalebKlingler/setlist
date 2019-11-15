@@ -5,7 +5,6 @@ import edu.launchcode.setlist.models.Setlist;
 import edu.launchcode.setlist.models.Song;
 import edu.launchcode.setlist.models.data.SetlistDao;
 import edu.launchcode.setlist.models.data.SongDao;
-import edu.launchcode.setlist.models.forms.AddSongToSetlistForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("setlist")
@@ -73,12 +71,19 @@ public class SetlistController {
         }
         int secondsMinutes = totalSeconds/60;
         totalSeconds = totalSeconds % 60;
+        if (totalSeconds < 10){
+            String stringTotalSeconds = "0" + String.valueOf(totalSeconds);
+            model.addAttribute("totalSeconds", stringTotalSeconds);
+        }
+        else {
+            model.addAttribute("totalSeconds", totalSeconds);
+        }
         totalMinutes += secondsMinutes;
         model.addAttribute("setlist", theSetlist);
         model.addAttribute("date", date);
         model.addAttribute("songs", theSetlist.getSongs());
         model.addAttribute("totalMinutes", totalMinutes );
-        model.addAttribute("totalSeconds", totalSeconds);
+
         return "setlist/view";
     }
     @RequestMapping(value = "view/{setlistId}", method = RequestMethod.GET)
@@ -95,11 +100,17 @@ public class SetlistController {
         int secondsMinutes = totalSeconds/60;
         totalSeconds = totalSeconds % 60;
         totalMinutes += secondsMinutes;
+        if (totalSeconds < 10){
+            String stringTotalSeconds = "0" + String.valueOf(totalSeconds);
+            model.addAttribute("totalSeconds", stringTotalSeconds);
+        }
+        else {
+            model.addAttribute("totalSeconds", totalSeconds);
+        }
         model.addAttribute("setlist", theSetlist);
         model.addAttribute("date", date);
         model.addAttribute("songs", theSetlist.getSongs());
         model.addAttribute("totalMinutes", totalMinutes );
-        model.addAttribute("totalSeconds", totalSeconds);
         return "setlist/view";
     }
 }

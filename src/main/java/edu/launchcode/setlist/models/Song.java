@@ -36,6 +36,17 @@ public class Song {
 
     public Song(){}
 
+    public String getTotalTime(){
+        String stringMinutes = String.valueOf(minutes);
+        if (minutes < 10){
+            stringMinutes = "0" + String.valueOf(minutes);
+        }
+        String stringSeconds = String.valueOf(seconds);
+        if (seconds < 10){
+            stringSeconds = "0" + String.valueOf(seconds);
+        }
+        return stringMinutes + ":" + stringSeconds;
+    }
 
     public int getId() {
         return id;
