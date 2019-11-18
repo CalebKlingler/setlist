@@ -113,6 +113,13 @@ public class SetlistController {
         model.addAttribute("totalMinutes", totalMinutes );
         return "setlist/view";
     }
+    @RequestMapping(value = "delete/{setlistId}", method = RequestMethod.GET)
+    public String deleteSetlist(Model model, @PathVariable int setlistId){
+        Setlist theSetlist = setlistDao.findById(setlistId).get();
+        setlistDao.delete(theSetlist);
+        model.addAttribute("message", theSetlist.getVenue() + " has been successfully deleted!");
+        return "setlist/delete";
+    }
 }
 
 

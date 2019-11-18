@@ -10,12 +10,12 @@
 
 <h1>Setlists</h1>
 <ul>
-    <li th:each="setlist : ${setlists}"><a th:href="@{'/setlist/view/' + ${setlist.id}}" th:text="${setlist.venue}"></a></li>
+    <li th:each="setlist : ${setlists}"><span th:text="${setlist.venue}"></span> <span><a th:href="@{'/setlist/view/' + ${setlist.id}}">|   View</a><span><a th:href="@{'/setlist/edit/' + ${setlist.id}}">|   Edit</a> <a th:href="@{'/setlist/delete/' + ${setlist.id}}">|   Delete</a></span></li>
 </ul>
 
 <h1>Songs</h1>
 <ul>
-    <li th:each="song : ${songs}"><a th:href="@{'/song/view/' + ${song.id}}" th:text="${song.name}"></a><span><a th:href="@{'/song/edit/' + ${song.id}}">   Edit</a></span></li>
+    <li th:each="song : ${songs}"><span th:text="${song.name}"></span><span><a th:href="@{'/song/view/' + ${song.id}}">|   View</a><a th:href="@{'/song/edit/' + ${song.id}}">|   Edit</a><a th:href="@{'/song/delete/' + ${song.id}}">|   Delete</a></span></li>
 </ul>
 
 

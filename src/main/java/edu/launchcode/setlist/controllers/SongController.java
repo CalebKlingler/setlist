@@ -69,4 +69,11 @@ public class SongController {
         return "song/view";
 
     }
+    @RequestMapping(value = "delete/{songId}", method = RequestMethod.GET)
+    public String deleteSong (Model model, @PathVariable int songId){
+        Song theSong = songDao.findById(songId).get();
+        songDao.delete(theSong);
+        model.addAttribute("message", theSong.getName() + " has been successfully deleted!");
+        return "song/delete";
+    }
 }
