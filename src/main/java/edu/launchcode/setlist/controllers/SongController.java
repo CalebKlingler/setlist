@@ -33,7 +33,9 @@ public class SongController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processAddSong(@ModelAttribute @Valid Song newSong, Errors errors, Model model){
         songDao.save(newSong);
+        String totalTime = newSong.getTotalTime();
         model.addAttribute("song", newSong);
+        model.addAttribute("time", totalTime);
         model.addAttribute("title", "Your new song!");
         return "song/index";
     }
@@ -53,7 +55,9 @@ public class SongController {
         theSong.setMinutes(newSong.getMinutes());
         theSong.setSeconds(newSong.getSeconds());
         songDao.save(theSong);
+        String totalTime = theSong.getTotalTime();
         model.addAttribute("song", theSong);
+        model.addAttribute("time", totalTime);
         model.addAttribute("title", "Updated song!");
         return "song/index";
 

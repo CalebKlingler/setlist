@@ -19,7 +19,7 @@
                 <td>
                     <th:block th:each="song : ${songs}">
                         <input type="checkbox" name="songs" th:value="${song.id}">
-                        <label th:text="${song.name + ' - ' + song.minutes + ':' + song.seconds}"></label>
+                        <label th:text="${song.name + ' - ' + song.totalTime}"></label>
                         <br>
                     </th:block>
                 </td>

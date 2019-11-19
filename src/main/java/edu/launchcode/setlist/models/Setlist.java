@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.security.sasl.SaslServer;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -33,6 +34,29 @@ public class Setlist {
 
     public Setlist(){}
 
+    public String getTotalTime(){
+        int totalMinutes = 0;
+        int totalSeconds =0;
+        String stringTotalSeconds ="0";
+        List<Song> theSongs = this.getSongs();
+        for (Song song : theSongs){
+            totalMinutes += song.getMinutes();
+            totalSeconds += song.getSeconds();
+        }
+
+        int secondsMinutes = totalSeconds/60;
+        totalSeconds = totalSeconds % 60;
+        if (totalSeconds < 10){
+           stringTotalSeconds += String.valueOf(totalSeconds);
+        }
+        else {
+           stringTotalSeconds = String.valueOf(totalSeconds);
+        }
+        totalMinutes += secondsMinutes;
+        String stringTotalMinutes = String.valueOf(totalMinutes);
+        String totalTime = stringTotalMinutes + ":" + stringTotalSeconds;
+        return totalTime;
+    }
     public int getId() {
         return id;
     }

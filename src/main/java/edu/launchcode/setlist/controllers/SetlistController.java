@@ -13,6 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -44,10 +46,21 @@ public class SetlistController {
     @RequestMapping(value="edit/{setlistId}", method = RequestMethod.GET)
     public String editSetlist(Model model, @PathVariable int setlistId){
         Setlist theSetlist = setlistDao.findById(setlistId).get();
-        Iterable<Song> theSongs = songDao.findAll();
+        List<Song> theSetlistSongs = theSetlist.getSongs();
+        Iterable<Song> allSongs = songDao.findAll();
+        List<Song> theSongs = new ArrayList<>();
+        for (Song song : allSongs){
+            if (theSetlistSongs.contains(song)){
+                continue;
+            }
+            else{
+                theSongs.add(song);
+            }
+        }
         model.addAttribute("songs", theSongs);
+        model.addAttribute("setlistSongs", theSetlistSongs);
         model.addAttribute("setlist", theSetlist);
-        model.addAttribute("title", "Add Song to Setlist" + theSetlist.getVenue());
+        model.addAttribute("title", "Add Song to Setlist " + theSetlist.getVenue());
         return "setlist/addSongs";
 
     }
@@ -62,27 +75,12 @@ public class SetlistController {
         }
         setlistDao.save(theSetlist);
         String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
-        int totalMinutes = 0;
-        int totalSeconds = 0;
+        String totalTime = theSetlist.getTotalTime();
         List<Song> allSongs = theSetlist.getSongs();
-        for (Song song : allSongs){
-            totalMinutes += song.getMinutes();
-            totalSeconds += song.getSeconds();
-        }
-        int secondsMinutes = totalSeconds/60;
-        totalSeconds = totalSeconds % 60;
-        if (totalSeconds < 10){
-            String stringTotalSeconds = "0" + String.valueOf(totalSeconds);
-            model.addAttribute("totalSeconds", stringTotalSeconds);
-        }
-        else {
-            model.addAttribute("totalSeconds", totalSeconds);
-        }
-        totalMinutes += secondsMinutes;
         model.addAttribute("setlist", theSetlist);
         model.addAttribute("date", date);
         model.addAttribute("songs", theSetlist.getSongs());
-        model.addAttribute("totalMinutes", totalMinutes );
+        model.addAttribute("time", totalTime );
 
         return "setlist/view";
     }
@@ -90,27 +88,12 @@ public class SetlistController {
     public String viewSetlist(Model model, @PathVariable int setlistId){
         Setlist theSetlist = setlistDao.findById(setlistId).get();
         String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
-        int totalMinutes = 0;
-        int totalSeconds = 0;
+        String totalTime = theSetlist.getTotalTime();
         List<Song> allSongs = theSetlist.getSongs();
-        for (Song song : allSongs){
-            totalMinutes += song.getMinutes();
-            totalSeconds += song.getSeconds();
-        }
-        int secondsMinutes = totalSeconds/60;
-        totalSeconds = totalSeconds % 60;
-        totalMinutes += secondsMinutes;
-        if (totalSeconds < 10){
-            String stringTotalSeconds = "0" + String.valueOf(totalSeconds);
-            model.addAttribute("totalSeconds", stringTotalSeconds);
-        }
-        else {
-            model.addAttribute("totalSeconds", totalSeconds);
-        }
         model.addAttribute("setlist", theSetlist);
         model.addAttribute("date", date);
         model.addAttribute("songs", theSetlist.getSongs());
-        model.addAttribute("totalMinutes", totalMinutes );
+        model.addAttribute("time", totalTime);
         return "setlist/view";
     }
     @RequestMapping(value = "delete/{setlistId}", method = RequestMethod.GET)
