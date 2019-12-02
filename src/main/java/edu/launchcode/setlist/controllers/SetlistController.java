@@ -12,9 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Index;
 import javax.validation.Valid;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -60,29 +63,53 @@ public class SetlistController {
         model.addAttribute("songs", theSongs);
         model.addAttribute("setlistSongs", theSetlistSongs);
         model.addAttribute("setlist", theSetlist);
-        model.addAttribute("title", "Add Song to Setlist " + theSetlist.getVenue());
-        return "setlist/addSongs";
+        model.addAttribute("title", "Add/Remove Songs from Setlist " + theSetlist.getVenue());
+        return "setlist/edit";
 
     }
 
     @RequestMapping(value = "edit/{setlistId}", method = RequestMethod.POST)
     public String processEditSetlist(Model model,
                                      @PathVariable int setlistId,
-                                     @RequestParam(value = "songs", required = false)int[] songs){
+                                     @RequestParam(value = "songs", required = false)int[] songs,
+                                     @RequestParam(value = "deletedSongs", required = false)int[] deletedSongs){
         Setlist theSetlist = setlistDao.findById(setlistId).get();
-        for(int songId : songs){
-            theSetlist.addSong(songDao.findById(songId).get());
+        List<Song> setlistSongs = theSetlist.getSongs();
+        List<Song> theSongs = new ArrayList<Song>();
+        if(songs != null) {
+            for (int songId : songs) {
+                theSetlist.addSong(songDao.findById(songId).get());
+            }
         }
+        if (deletedSongs != null){
+        for (int songId : deletedSongs){
+            Song theSong = songDao.findById(songId).get();
+            setlistSongs.remove(theSong);
+        }
+        }
+        theSetlist.setSongs(setlistSongs);
         setlistDao.save(theSetlist);
+        setlistSongs = theSetlist.getSongs();
+        Iterable<Song> allSongs = songDao.findAll();
+        for (Song song : allSongs){
+            if (setlistSongs.contains(song)){
+                continue;
+            }
+            else{
+                theSongs.add(song);
+            }
+        }
         String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
         String totalTime = theSetlist.getTotalTime();
-        List<Song> allSongs = theSetlist.getSongs();
+        setlistSongs = theSetlist.getSongs();
+        model.addAttribute("setlistSongs", setlistSongs);
         model.addAttribute("setlist", theSetlist);
         model.addAttribute("date", date);
-        model.addAttribute("songs", theSetlist.getSongs());
+        model.addAttribute("songs", theSongs);
         model.addAttribute("time", totalTime );
+        model.addAttribute("title", "Add/Remove Songs from Setlist " + theSetlist.getVenue());
 
-        return "setlist/view";
+        return "setlist/edit";
     }
     @RequestMapping(value = "view/{setlistId}", method = RequestMethod.GET)
     public String viewSetlist(Model model, @PathVariable int setlistId){
@@ -92,7 +119,7 @@ public class SetlistController {
         List<Song> allSongs = theSetlist.getSongs();
         model.addAttribute("setlist", theSetlist);
         model.addAttribute("date", date);
-        model.addAttribute("songs", theSetlist.getSongs());
+        model.addAttribute("songs", allSongs);
         model.addAttribute("time", totalTime);
         return "setlist/view";
     }
@@ -102,6 +129,47 @@ public class SetlistController {
         setlistDao.delete(theSetlist);
         model.addAttribute("message", theSetlist.getVenue() + " has been successfully deleted!");
         return "setlist/delete";
+    }
+
+    @RequestMapping(value = "reorder/{setlistId}", method = RequestMethod.GET)
+        public String displayReorderSetlist(Model model, @PathVariable int setlistId){
+        Setlist theSetlist = setlistDao.findById(setlistId).get();
+        List<Song> theSongs = theSetlist.getSongs();
+        model.addAttribute("songs", theSetlist.getSongs());
+        model.addAttribute("setlist", theSetlist);
+        String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
+        model.addAttribute("date", date);
+        String totalTime = theSetlist.getTotalTime();
+        model.addAttribute("time", totalTime);
+        return "setlist/reorder";
+
+
+    }
+    @RequestMapping(value = "reorder/{setlistId}/{songId}/{direction}", method = RequestMethod.GET)
+    public String reorderSetlist(Model model, @PathVariable int setlistId, @PathVariable int songId, @PathVariable String direction){
+        Setlist theSetlist = setlistDao.findById(setlistId).get();
+        List<Song> theSongs = theSetlist.getSongs();
+        int songIndex = theSongs.indexOf(songDao.findById(songId).get());
+        int otherIndex;
+        if (direction.equals("down")){
+            otherIndex = songIndex + 1;
+        }
+        else {
+            otherIndex = songIndex - 1;
+        }
+        Collections.swap(theSongs,otherIndex, songIndex);
+        Collections.reverse(theSongs);
+        theSetlist.setSongs(theSongs);
+        setlistDao.save(theSetlist);
+        model.addAttribute("songs", theSongs);
+        model.addAttribute("setlist", theSetlist);
+        String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
+        model.addAttribute("date", date);
+        String totalTime = theSetlist.getTotalTime();
+        model.addAttribute("time", totalTime);
+        return "redirect:/setlist/reorder/" + setlistId;
+
+
     }
 }
 

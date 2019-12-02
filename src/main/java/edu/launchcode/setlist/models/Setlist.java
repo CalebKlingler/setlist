@@ -1,5 +1,7 @@
 package edu.launchcode.setlist.models;
 
+import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -79,6 +81,9 @@ public class Setlist {
         return songs;
     }
 
+    public void setSongs(List<Song> songs){
+        this.songs = songs;
+    }
 
     public String getDay() {
         return day;

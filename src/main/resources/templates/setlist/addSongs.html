@@ -7,30 +7,58 @@
 <h1 th:text="${title}">Default Title</h1>
 
 <nav th:replace="fragments :: navigation"></nav>
+<div class="row">
+    <div class="span6">
+        <form method="post" style="max-width:600px;">
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td>Songs</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <th:block th:each="song : ${songs}">
+                                <input type="checkbox" name="songs" th:value="${song.id}">
+                                <label th:text="${song.name + ' - ' + song.totalTime}"></label>
+                                <br>
+                            </th:block>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
 
 
-<form method="post" style="max-width:600px;" th:object="${form}">
-    <div class="form-group">
-        <table>
-            <tr>
-                <td>Songs</td>
-            </tr>
-            <tr>
-                <td>
-                    <th:block th:each="song : ${songs}">
-                        <input type="checkbox" name="songs" th:value="${song.id}">
-                        <label th:text="${song.name + ' - ' + song.totalTime}"></label>
-                        <br>
-                    </th:block>
-                </td>
-            </tr>
-        </table>
-
+            <input type="submit" value="Add Songs" />
+        </form>
     </div>
+<div class="span6">
+
+    <form method="post" style="max-width:600px;" th:object="${form}">
+            <div class="form-group">
+                <table>
+                    <tr>
+                        <td>Songs</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <th:block th:each="setlistSong : ${setlistSongs}">
+                                <input type="checkbox" name="deletedSongs" th:value="${setlistSong.id}">
+                                <label th:text="${setlistSong.name + ' - ' + setlistSong.totalTime}"></label>
+                                <br>
+                            </th:block>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
 
 
-    <input type="submit" value="Add Songs" />
-</form>
+            <input type="submit" value="Delete Songs" />
+        </form>
+</div>
+</div>
+
 
 </body>
 </html>
