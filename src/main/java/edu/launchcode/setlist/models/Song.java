@@ -24,7 +24,7 @@ public class Song {
     private int seconds;
 
     @ManyToMany(mappedBy = "songs")
-    private List<Songlist> songlists;
+    private List<Category> categories;
 
 
     @ManyToMany(mappedBy = "songs")
@@ -85,12 +85,12 @@ public class Song {
         this.seconds = seconds;
     }
 
-    public List<Songlist> getSonglists() {
-        return songlists;
+    public List<Category> getCategories() {
+        return categories;
     }
 
-    public void setSonglists(List<Songlist> songlists) {
-        this.songlists = songlists;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
     public Library getLibary() {

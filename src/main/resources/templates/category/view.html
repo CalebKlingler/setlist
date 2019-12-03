@@ -9,13 +9,11 @@
 <nav th:replace="fragments :: navigation"></nav>
 
 
-<h1 th:text="${setlist.venue}"></h1>
-<h2 th:text="${date}"></h2>
+<h1 th:text="${category.name}"></h1>
 
 <table>
     <tr>
         <td> <th:block th:each="song : ${songs}"><p th:text="${song.name + ' - ' + song.TotalTime}"></p><br></th:block> </td></tr>
 </table>
-<h2 th:text="${'Total time: ' + time}"></h2>
 </body>
 </html>

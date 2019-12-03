@@ -2,6 +2,7 @@ package edu.launchcode.setlist.controllers;
 
 
 import edu.launchcode.setlist.models.Song;
+import edu.launchcode.setlist.models.data.CategoryDao;
 import edu.launchcode.setlist.models.data.SetlistDao;
 import edu.launchcode.setlist.models.data.SongDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,15 @@ public class HomeController {
     @Autowired
     private SongDao songDao;
 
+    @Autowired
+    private CategoryDao categoryDao;
+
     @RequestMapping(value = "")
     public String index(Model model){
-        model.addAttribute("Title", "SETLIST");
+        model.addAttribute("title", "SETLIST");
         model.addAttribute("songs", songDao.findAll());
         model.addAttribute("setlists", setlistDao.findAll());
+        model.addAttribute("categories", categoryDao.findAll());
 
         return "home/index";
     }

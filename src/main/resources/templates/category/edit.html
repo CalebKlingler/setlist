@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<nav th:replace="fragments :: navigation"></nav>
+<body class="container">
+
+<h1 th:text="${title}">Default Title</h1>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <form method="post">
+                <h1>Available Songs</h1>
+                <th:block th:each="song : ${availableSongs}">
+                    <input type="checkbox" name="songs" th:value="${song.id}">
+                    <label th:text="${song.name + ' - ' + song.totalTime}"></label>
+                    <br>
+                </th:block>
+                <button class="btn btn-large btn-primary" type="submit">Add Songs to Category</button>
+            </form>
+        </div>
+
+        <div class="col-sm-6">
+
+            <form method="post">
+                <h1 th:text="${category.name}">Current Category</h1>
+                <th:block th:each="categorySong : ${categorySongs}">
+                    <input type="checkbox" name="deletedSongs" th:value="${categorySong.id}">
+                    <label th:text="${categorySong.name + ' - ' + categorySong.totalTime}"></label>
+                    <br>
+                </th:block>
+                <button class="btn btn-large btn-primary" type="submit">Remove Songs From Category</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

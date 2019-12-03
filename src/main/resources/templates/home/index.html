@@ -4,20 +4,32 @@
 
 <body class="container">
 
-<h1 th:text="${title}">Default Title</h1>
+<h1 class="display-1" th:text="${title}">Default Title</h1>
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<h1>Setlists</h1>
+<h3 class="display-3">Setlists</h3>
+
 <ul>
     <li th:each="setlist : ${setlists}"><span th:text="${setlist.venue}"></span> <span><a th:href="@{'/setlist/view/' + ${setlist.id}}">|   View</a><span><a th:href="@{'/setlist/edit/' + ${setlist.id}}">|   Edit</a> <a th:href="@{'/setlist/delete/' + ${setlist.id}}">|   Delete</a><a th:href="@{'/setlist/reorder/' + ${setlist.id}}">|   Reorder</a></span></li>
+    <li><a href="/setlist/add">Add Setlist</a></li>
 </ul>
 
-<h1>Songs</h1>
+<h3 class="display-3">Songs</h3>
 <ul>
     <li th:each="song : ${songs}"><span th:text="${song.name}"></span><span><a th:href="@{'/song/view/' + ${song.id}}">|   View</a><a th:href="@{'/song/edit/' + ${song.id}}">|   Edit</a><a th:href="@{'/song/delete/' + ${song.id}}">|   Delete</a></span></li>
+    <li><a href="/song/add">Add Song</a></li>
 </ul>
+
+<h3 class="display-3">Categories</h3>
+<ul>
+    <li th:each="category : ${categories}"><span th:text="${category.name}"></span><span><a th:href="@{'/category/view/' + ${category.id}}">|   View</a><a th:href="@{'/category/edit/' + ${category.id}}">|   Edit</a><a th:href="@{'/category/delete/' + ${category.id}}">|   Delete</a></span></li>
+    <li><a href="/song/add">Add Category</a></li>
+</ul>
+
+
 
 
 </body>
+
 </html>
