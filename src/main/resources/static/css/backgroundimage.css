@@ -1,16 +1,15 @@
 body, html {
   height: 100%;
- }
-
+}
 .bg {
   /* The image used */
-  background-image: url("src/main/resources/images/setlistbackground.png");
+  background-image: url('../images/setlistbackground.png');
 
   /* Full height */
   height: 100%;
 
   /* Center and scale the image nicely */
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
 }
