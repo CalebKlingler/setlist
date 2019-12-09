@@ -7,6 +7,8 @@ import edu.launchcode.setlist.models.data.SetlistDao;
 import edu.launchcode.setlist.models.data.SongDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -39,6 +41,9 @@ public class SetlistController {
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processAddSetlist(@ModelAttribute @Valid Setlist newSetlist, Errors errors,  Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        model.addAttribute("name", name);
         setlistDao.save(newSetlist);
         model.addAttribute("setlist", newSetlist);
         String date = newSetlist.getMonth() + "/" + newSetlist.getDay() + "/" + newSetlist.getYear();
