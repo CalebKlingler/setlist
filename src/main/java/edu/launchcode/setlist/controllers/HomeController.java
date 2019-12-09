@@ -14,6 +14,7 @@ import java.util.List;
 
 
 @Controller
+@RequestMapping("home")
 public class HomeController {
     @Autowired
     private SetlistDao setlistDao;
