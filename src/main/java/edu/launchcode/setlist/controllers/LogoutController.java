@@ -13,7 +13,7 @@ public class LogoutController {
     @RequestMapping(value = "")
     public String logout(){
         SecurityContextHolder.clearContext();
-        return "home/index";
+        return "login/login";
     }
 
 }

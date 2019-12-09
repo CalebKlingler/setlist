@@ -4,11 +4,13 @@
 
 <body class="container-fluid bg text-light">
 
-<h1 th:text="${title}">Default Title</h1>
+
+<h1 class="display-1" th:text="${title}">Default Title</h1>
 
 <nav th:replace="fragments :: navigation"></nav>
+<h5 class="display-5" th:text="${welcomeMessage}"></h5>
 
-<h1 th:text="${message}"></h1>
 
 </body>
+
 </html>
