@@ -1,5 +1,6 @@
 package edu.launchcode.setlist.service;
 
+import edu.launchcode.setlist.models.Library;
 import edu.launchcode.setlist.models.Role;
 import edu.launchcode.setlist.models.User;
 import edu.launchcode.setlist.repositories.RoleRepository;
@@ -36,6 +37,7 @@ public class UserService {
         user.setActive(1);
         Role userRole = roleRepository.findByRole("ADMIN");
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        user.setLibrary(new Library());
         userRepository.save(user);
     }
 

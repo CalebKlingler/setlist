@@ -2,6 +2,7 @@ package edu.launchcode.setlist.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.nio.MappedByteBuffer;
 import java.util.List;
 
 
@@ -30,19 +31,21 @@ public class Song {
     @ManyToMany(mappedBy = "songs")
     private List<Setlist> setlists;
 
+
     @ManyToOne
     private Library library;
 
 
-    public Song(){}
+    public Song() {
+    }
 
-    public String getTotalTime(){
+    public String getTotalTime() {
         String stringMinutes = String.valueOf(minutes);
-        if (minutes < 10){
+        if (minutes < 10) {
             stringMinutes = "0" + String.valueOf(minutes);
         }
         String stringSeconds = String.valueOf(seconds);
-        if (seconds < 10){
+        if (seconds < 10) {
             stringSeconds = "0" + String.valueOf(seconds);
         }
         return stringMinutes + ":" + stringSeconds;
@@ -93,9 +96,6 @@ public class Song {
         this.categories = categories;
     }
 
-    public Library getLibary() {
-        return library;
-    }
 
     public Library getLibrary() {
         return library;
@@ -105,3 +105,4 @@ public class Song {
         this.library = library;
     }
 }
+

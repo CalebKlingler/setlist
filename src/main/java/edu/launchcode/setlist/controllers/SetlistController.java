@@ -1,10 +1,14 @@
 package edu.launchcode.setlist.controllers;
 
 import com.sun.org.apache.bcel.internal.generic.RETURN;
+import edu.launchcode.setlist.models.Library;
 import edu.launchcode.setlist.models.Setlist;
 import edu.launchcode.setlist.models.Song;
+import edu.launchcode.setlist.models.User;
+import edu.launchcode.setlist.models.data.LibraryDao;
 import edu.launchcode.setlist.models.data.SetlistDao;
 import edu.launchcode.setlist.models.data.SongDao;
+import edu.launchcode.setlist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -31,6 +35,12 @@ public class SetlistController {
     @Autowired
     private SongDao songDao;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private LibraryDao libraryDao;
+
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String addSetlist(Model model){
         model.addAttribute("title", "Add Setlist");
@@ -42,9 +52,13 @@ public class SetlistController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processAddSetlist(@ModelAttribute @Valid Setlist newSetlist, Errors errors,  Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = auth.getName();
-        model.addAttribute("name", name);
+        User user = userService.findUserByEmail(auth.getName());
         setlistDao.save(newSetlist);
+        Library library = user.getLibrary();
+        List<Setlist> setlists = library.getSetlists();
+        setlists.add(newSetlist);
+        library.setSetlists(setlists);
+        libraryDao.save(library);
         model.addAttribute("setlist", newSetlist);
         String date = newSetlist.getMonth() + "/" + newSetlist.getDay() + "/" + newSetlist.getYear();
         model.addAttribute("date", date);
@@ -53,9 +67,12 @@ public class SetlistController {
 
     @RequestMapping(value="edit/{setlistId}", method = RequestMethod.GET)
     public String editSetlist(Model model, @PathVariable int setlistId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(auth.getName());
         Setlist theSetlist = setlistDao.findById(setlistId).get();
         List<Song> theSetlistSongs = theSetlist.getSongs();
-        Iterable<Song> allSongs = songDao.findAll();
+        Library library = user.getLibrary();
+        List<Song> allSongs = library.getSongs();
         List<Song> theSongs = new ArrayList<>();
         for (Song song : allSongs){
             if (theSetlistSongs.contains(song)){
@@ -78,6 +95,9 @@ public class SetlistController {
                                      @PathVariable int setlistId,
                                      @RequestParam(value = "songs", required = false)int[] songs,
                                      @RequestParam(value = "deletedSongs", required = false)int[] deletedSongs){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(auth.getName());
+        Library library = user.getLibrary();
         Setlist theSetlist = setlistDao.findById(setlistId).get();
         List<Song> setlistSongs = theSetlist.getSongs();
         List<Song> theSongs = new ArrayList<Song>();
@@ -95,7 +115,7 @@ public class SetlistController {
         theSetlist.setSongs(setlistSongs);
         setlistDao.save(theSetlist);
         setlistSongs = theSetlist.getSongs();
-        Iterable<Song> allSongs = songDao.findAll();
+        List<Song> allSongs = library.getSongs();
         for (Song song : allSongs){
             if (setlistSongs.contains(song)){
                 continue;
@@ -166,7 +186,8 @@ public class SetlistController {
         Collections.reverse(theSongs);
         theSetlist.setSongs(theSongs);
         setlistDao.save(theSetlist);
-        model.addAttribute("songs", theSongs);
+        theSetlist = setlistDao.findById(setlistId).get();
+        model.addAttribute("songs", theSetlist.getSongs());
         model.addAttribute("setlist", theSetlist);
         String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
         model.addAttribute("date", date);

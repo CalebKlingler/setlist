@@ -2,8 +2,10 @@ package edu.launchcode.setlist.controllers;
 
 import javax.validation.Valid;
 
+import edu.launchcode.setlist.models.Library;
 import edu.launchcode.setlist.models.User;
 import edu.launchcode.setlist.models.data.CategoryDao;
+import edu.launchcode.setlist.models.data.LibraryDao;
 import edu.launchcode.setlist.models.data.SetlistDao;
 import edu.launchcode.setlist.models.data.SongDao;
 import edu.launchcode.setlist.service.UserService;
@@ -30,6 +32,9 @@ public class LoginController {
 
     @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private LibraryDao libraryDao;
 
     @RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
     public ModelAndView login(){
@@ -59,8 +64,10 @@ public class LoginController {
         }
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("login/registration");
-        } else {
+        }
+        else {
             userService.saveUser(user);
+
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("login/registration");
@@ -76,10 +83,8 @@ public class LoginController {
         model.addAttribute("welcomeMessage", "Welcome " + user.getName() + " " + user.getLastName() + "! (" + user.getEmail() + ")");
         model.addAttribute("adminMessage","Content Available Only for Users with Admin Role");
         model.addAttribute("title", "SETLIST");
-        model.addAttribute("songs", songDao.findAll());
-        model.addAttribute("setlists", setlistDao.findAll());
-        model.addAttribute("categories", categoryDao.findAll());
-        return "redirect:/home";
+
+        return"redirect:/home";
     }
 
 

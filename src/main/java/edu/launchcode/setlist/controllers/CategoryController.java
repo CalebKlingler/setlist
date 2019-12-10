@@ -1,11 +1,17 @@
 package edu.launchcode.setlist.controllers;
 
 
+import edu.launchcode.setlist.models.Library;
 import edu.launchcode.setlist.models.Song;
 import edu.launchcode.setlist.models.Category;
+import edu.launchcode.setlist.models.User;
+import edu.launchcode.setlist.models.data.LibraryDao;
 import edu.launchcode.setlist.models.data.SongDao;
 import edu.launchcode.setlist.models.data.CategoryDao;
+import edu.launchcode.setlist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -25,6 +31,12 @@ public class CategoryController {
     @Autowired
     private SongDao songDao;
 
+    @Autowired
+    private LibraryDao libraryDao;
+
+    @Autowired
+    private UserService userService;
+
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String add(Model model) {
         model.addAttribute("title", "Add Category");
@@ -35,6 +47,13 @@ public class CategoryController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processAddSonglist(@ModelAttribute @Valid Category newCategory, Errors errors, Model model) {
         categoryDao.save(newCategory);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(authentication.getName());
+        Library library = user.getLibrary();
+        List<Category> categories = library.getCategories();
+        categories.add(newCategory);
+        library.setCategories(categories);
+        libraryDao.save(library);
         model.addAttribute("songlist", newCategory);
         model.addAttribute("title", newCategory.getName());
         return "category/index";
@@ -42,8 +61,10 @@ public class CategoryController {
 
     @RequestMapping(value = "edit/{categoryId}", method = RequestMethod.GET)
     public String editSonglist(Model model, @PathVariable int categoryId) {
-
-        Iterable<Song> allSongs = songDao.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(authentication.getName());
+        Library theLibrary = user.getLibrary();
+        List<Song> allSongs = theLibrary.getSongs();
         List<Song> availableSongs = new ArrayList<Song>();
         Category theCategory = categoryDao.findById(categoryId).get();
         List<Song> categorySongs = theCategory.getSongs();
@@ -64,6 +85,9 @@ public class CategoryController {
     @RequestMapping(value = "edit/{categoryId}", method = RequestMethod.POST)
     public String editSonglist(Model model, @PathVariable int categoryId, @RequestParam(value = "songs", required = false) int[] songs,
                                @RequestParam(value = "deletedSongs", required = false) int[] deletedSongs) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(authentication.getName());
+        Library theLibrary = user.getLibrary();
         Category theCategory = categoryDao.findById(categoryId).get();
         List<Song> categorySongs = theCategory.getSongs();
         if(songs!=null) {
@@ -80,7 +104,7 @@ public class CategoryController {
         }
         theCategory.setSongs(categorySongs);
         categoryDao.save(theCategory);
-        Iterable<Song> allSongs = songDao.findAll();
+        List<Song> allSongs = theLibrary.getSongs();
         List<Song> availableSongs = new ArrayList<Song>();
 
         categorySongs = theCategory.getSongs();
