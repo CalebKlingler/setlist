@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+
+<body class="container-fluid bg text-light">
+
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<h2>No songs in setlist <span th:text="${setlist.venue}"></span>. Would you like to <a class="text-info" th:href="@{'/setlist/edit/' + ${setlist.id}}">add songs?</a></h2>
+
+</body>
+</html>

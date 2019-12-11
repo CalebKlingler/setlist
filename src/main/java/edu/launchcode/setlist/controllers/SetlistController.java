@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.persistence.Index;
 import javax.validation.Valid;
 
@@ -139,6 +140,11 @@ public class SetlistController {
     @RequestMapping(value = "view/{setlistId}", method = RequestMethod.GET)
     public String viewSetlist(Model model, @PathVariable int setlistId){
         Setlist theSetlist = setlistDao.findById(setlistId).get();
+        List<Song> theSongs = theSetlist.getSongs();
+        if (theSongs.isEmpty()){
+            model.addAttribute("setlist", theSetlist);
+            return "setlist/empty";
+        }
         String date = theSetlist.getMonth() + "/" + theSetlist.getDay() + "/" + theSetlist.getYear();
         String totalTime = theSetlist.getTotalTime();
         List<Song> allSongs = theSetlist.getSongs();
