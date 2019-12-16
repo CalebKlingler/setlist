@@ -14,7 +14,7 @@
 
 <table>
     <tr>
-        <td> <th:block th:each="song,iter : ${songs}"><br><a th:href="@{'/setlist/reorder/' + ${setlist.id} + '/' + ${song.id} + '/up'}">Up</a><div th:text="${song.name + ' - ' + song.TotalTime}"></div> <a th:href="@{'/setlist/reorder/' + ${setlist.id} + '/' + ${song.id} + '/down'}">Down</a><br></th:block> </td></tr><nobr>
+        <td> <th:block th:each="song,iter : ${songs}"><br><a th:href="@{'/setlist/reorder/' + ${setlist.id} + '/' + ${song.id} + '/up'}" th:unless="${iter.first}">Up</a><div th:text="${song.name + ' - ' + song.TotalTime}"></div> <a th:href="@{'/setlist/reorder/' + ${setlist.id} + '/' + ${song.id} + '/down'}" th:unless="${iter.last}">Down</a><br></th:block> </td></tr><nobr>
 </table>
 <h2 th:text="${'Total time: ' + time}"></h2>
 </body>
