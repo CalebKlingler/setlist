@@ -41,4 +41,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+
+    public void updatePassword(String password, int userId) {
+        userRepository.updatePassword(password, userId);
+    }
+
 }
