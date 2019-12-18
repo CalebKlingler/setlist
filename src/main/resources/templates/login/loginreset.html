@@ -9,12 +9,11 @@
     <a class="text-info" href="/song/add">Add Song</a> |
     <a class="text-info" href="/category/add">Add Category</a>  |
 </nav>
-
 <div class="container">
     <form th:action="@{/login}" method="POST" class="form-signin">
         <h3 class="form-signin-heading" th:text="Welcome"></h3>
         <br/>
-
+        <h4>Password was successfully reset!</h4>
         <input type="text" id="email" name="email"  th:placeholder="Email"
                class="form-control" /> <br/>
         <input type="password"  th:placeholder="Password"

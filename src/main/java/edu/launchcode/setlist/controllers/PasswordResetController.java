@@ -63,7 +63,7 @@ public class PasswordResetController {
         userService.updatePassword(updatedPassword, user.getId());
         tokenRepository.delete(token);
 
-        return "redirect:/login?resetSuccess";
+        return "redirect:/home";
     }
 
 }
